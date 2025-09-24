@@ -70,6 +70,23 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // ✅ Paste StartScreen right here (same level, no extra tab)
+    function StartScreen({ onStart }) {
+        return React.createElement(
+        "div",
+        { style: { maxWidth: 560, margin: "40px auto", fontFamily: "system-ui, sans-serif", lineHeight: 1.5 } },
+        [
+            React.createElement("h1", { key: "h1" }, "Stroop Task"),
+            React.createElement("p", { key: "p1" }, "Press F for RED, J for GREEN. Click Start to begin."),
+            React.createElement("button", {
+            key: "btn",
+            onClick: onStart,
+            style: { padding: "10px 16px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer", fontSize: 16 }
+            }, "Start")
+        ]
+        );
+    }  
+
     async function getCondition(db, study, pId = null) {
         const metaRef = doc(db, study, "autora_meta");
         return await runTransaction(db, async (tx) => {
@@ -195,11 +212,14 @@
         }
     }
 
-    // Go!
-    index().catch((e) => {
-        console.error(e);
-        root.render(React.createElement(React.StrictMode, null, React.createElement(ErrorView, {message: "Unexpected error. Check console."})));
-    });
+  // With this:
+    root.render(
+        React.createElement(
+        React.StrictMode,
+        null,
+        React.createElement(StartScreen, { onStart: () => index().catch(console.error) })
+        )
+    );
 </script>
 </body>
 </html>
